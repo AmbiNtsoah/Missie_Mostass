@@ -8,10 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-/**
- * Classe qui permet l'interaction de l'application
- * à la base de données sqlite
- */
 public class DBConnect implements AuthService {
     private static final String URL = "jdbc:sqlite:users.db";
 
@@ -83,10 +79,7 @@ public class DBConnect implements AuthService {
         }
     }
     
- /**
-  *  Ajout de la méthode getAllUsers
-  * @return
-  */
+ // Ajout de la méthode getAllUsers
     public List<User> getAllUsers() {
         List<User> users = new ArrayList<>();
         String sql = "SELECT * FROM users";
@@ -103,11 +96,7 @@ public class DBConnect implements AuthService {
         return users;
     }
 
-    /**
-     *  Méthode pour ajouter un nouvel utilisateur
-     * @param username
-     * @param password
-     */
+    // Méthode pour ajouter un nouvel utilisateur
     public void addUser(String username, String password) {
         String hashedPassword = HashUtils.hashPassword(password);
         String sql = "INSERT INTO users(username, password) VALUES(?, ?)";
@@ -122,11 +111,7 @@ public class DBConnect implements AuthService {
         }
     }
 
-    /**
-     *  Méthode pour lire les informations d'un utilisateur
-     * @param username
-     * @return
-     */
+    // Méthode pour lire les informations d'un utilisateur
     public User getUser(String username) {
         String sql = "SELECT * FROM users WHERE username = ?";
         try (Connection conn = DriverManager.getConnection(URL);
@@ -144,12 +129,7 @@ public class DBConnect implements AuthService {
         }
     }
 
-    /**
-     *  Méthode pour mettre à jour les informations d'un utilisateur
-     * @param id
-     * @param newUsername
-     * @param newPassword
-     */
+    // Méthode pour mettre à jour les informations d'un utilisateur
     public void updateUser(int id, String newUsername, String newPassword) {
         String hashedPassword = HashUtils.hashPassword(newPassword);
         String sql = "UPDATE users SET username = ?, password = ? WHERE id = ?";
@@ -165,10 +145,7 @@ public class DBConnect implements AuthService {
         }
     }
 
-    /**
-     *  Méthode pour supprimer un utilisateur
-     * @param id
-     */
+    // Méthode pour supprimer un utilisateur
     public void deleteUser(int id) {
         String sql = "DELETE FROM users WHERE id = ?";
         try (Connection conn = DriverManager.getConnection(URL);
@@ -181,11 +158,7 @@ public class DBConnect implements AuthService {
         }
     }
     
- /**
-  *  Méthode pour réinitialiser le mot de passe
-  * @param id
-  * @param newPassword
-  */
+ // Méthode pour réinitialiser le mot de passe
     public void resetPassword(int id, String newPassword) {
         String hashedPassword = HashUtils.hashPassword(newPassword);
         String sql = "UPDATE users SET password = ? WHERE id = ?";
@@ -199,11 +172,6 @@ public class DBConnect implements AuthService {
             throw new CustomException("Erreur de réinitialisation du mot de passe");
         }
     }
-    
-    /**
-     *  Méthode pour ajouter des messages
-     * @param id
-     */
     public void addMessage(String userId, String filePath) {
         String sql = "INSERT INTO messages(user_id, file_path) VALUES(?, ?)";
         try (Connection conn = DriverManager.getConnection(URL);
@@ -216,10 +184,7 @@ public class DBConnect implements AuthService {
             throw new CustomException("Erreur d'enregistrement dans la base de données");
         }
     }
-    /**
-     *  Méthode pour lister les messages
-     * @param id
-     */
+
     public List<Message> getMessages(String userId) {
         List<Message> messages = new ArrayList<>();
         String sql = "SELECT * FROM messages WHERE user_id = ?";
@@ -237,10 +202,6 @@ public class DBConnect implements AuthService {
         return messages;
     }
 
-    /**
-     *  Méthode pour supprimer les messages
-     * @param id
-     */
     public void deleteMessage(int id) {
         String sql = "DELETE FROM messages WHERE id = ?";
         try (Connection conn = DriverManager.getConnection(URL);
