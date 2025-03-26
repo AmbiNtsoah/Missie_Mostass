@@ -3,16 +3,17 @@ package frames;
 import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class VoiceRecorder {
     private static final int RECORD_TIME = 60000; // 1 minute
-    private static final String FILE_PATH = "recorded_audio.wav";
     private TargetDataLine line;
     private Thread recordingThread;
     private boolean isRecording = false;
 
-    public void startRecording() {
-        File audioFile = new File(FILE_PATH);
+    public void startRecording(String filePath) {
+        File audioFile = new File(filePath);
         AudioFormat format = new AudioFormat(16000, 16, 2, true, true);
         DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
 
@@ -62,5 +63,10 @@ public class VoiceRecorder {
 
     public boolean isRecording() {
         return isRecording;
+    }
+
+    public static String generateFilePath() {
+        String timestamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+        return "recorded_audio_" + timestamp + ".wav";
     }
 }

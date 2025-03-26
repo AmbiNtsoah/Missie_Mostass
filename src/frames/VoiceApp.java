@@ -14,6 +14,7 @@ public class VoiceApp extends JFrame {
     private JLabel recordingLabel;
     private JButton playButton;
     private JLabel recordedFileLabel;
+    private String currentFilePath;
 
     public VoiceApp() {
         setTitle("Voice Recorder");
@@ -41,6 +42,11 @@ public class VoiceApp extends JFrame {
         crudButton.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         crudButton.setBackground(new Color(255, 165, 0));
         crudButton.setForeground(Color.WHITE);
+        
+        JButton messageCrudButton = new JButton("Gestion des messages");
+        messageCrudButton.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        messageCrudButton.setBackground(new Color(255, 69, 0));
+        messageCrudButton.setForeground(Color.WHITE);
 
         recordingLabel = new JLabel("Enregistrement en cours...");
         recordingLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
@@ -54,7 +60,8 @@ public class VoiceApp extends JFrame {
         recordButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                recorder.startRecording();
+                currentFilePath = VoiceRecorder.generateFilePath();
+                recorder.startRecording(currentFilePath);
                 recordingLabel.setVisible(true);
                 playButton.setEnabled(false);
                 recordedFileLabel.setVisible(false);
@@ -67,15 +74,18 @@ public class VoiceApp extends JFrame {
                 recorder.stopRecording();
                 recordingLabel.setVisible(false);
                 playButton.setEnabled(true);
-                recordedFileLabel.setText("Fichier enregistré: recorded_audio.wav");
+                recordedFileLabel.setText("Fichier enregistré:" + currentFilePath);
                 recordedFileLabel.setVisible(true);
+                String userId = "user_id_placeholder"; // Remplacez par l'ID utilisateur approprié
+                String filePath = currentFilePath;
+                dbConnect.addMessage(userId, filePath);
             }
         });
 
         playButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                playAudio("recorded_audio.wav");
+                playAudio(currentFilePath);
             }
         });
 
@@ -83,6 +93,14 @@ public class VoiceApp extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 new CRUDFrame().setVisible(true);
+                VoiceApp.this.setVisible(false);
+            }
+        });
+        
+        messageCrudButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new MessageCRUDFrame().setVisible(true);
                 VoiceApp.this.setVisible(false);
             }
         });
@@ -100,6 +118,7 @@ public class VoiceApp extends JFrame {
                     .addComponent(stopButton)
                     .addComponent(playButton)
                     .addComponent(crudButton)
+                    .addComponent(messageCrudButton)
                     .addComponent(recordingLabel)
                     .addComponent(recordedFileLabel))
         );
@@ -110,6 +129,7 @@ public class VoiceApp extends JFrame {
                 .addComponent(stopButton)
                 .addComponent(playButton)
                 .addComponent(crudButton)
+                .addComponent(messageCrudButton)
                 .addComponent(recordingLabel)
                 .addComponent(recordedFileLabel)
         );

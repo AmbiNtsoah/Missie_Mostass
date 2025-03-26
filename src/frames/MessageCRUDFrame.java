@@ -3,15 +3,18 @@ package frames;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.sound.sampled.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 public class MessageCRUDFrame extends JFrame {
-    private static final long serialVersionUID = 1L;
+    private static final long serialUID = 1L;
     private JPanel contentPane;
-    private JTextField userIdField;
+    private JTextField messageIdField;
     private JTextField filePathField;
     private JTable table;
     private DBConnect dbConnect = new DBConnect();
@@ -27,12 +30,12 @@ public class MessageCRUDFrame extends JFrame {
         titleLabel.setFont(new Font("Segoe UI", Font.PLAIN, 24));
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
-        JLabel userIdLabel = new JLabel("ID Utilisateur:");
-        userIdLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        JLabel messageIdLabel = new JLabel("ID du Message:");
+        messageIdLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 
-        userIdField = new JTextField();
-        userIdField.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        userIdField.setColumns(10);
+        messageIdField = new JTextField();
+        messageIdField.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        messageIdField.setColumns(10);
 
         JLabel filePathLabel = new JLabel("Chemin du fichier:");
         filePathLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
@@ -40,14 +43,6 @@ public class MessageCRUDFrame extends JFrame {
         filePathField = new JTextField();
         filePathField.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         filePathField.setColumns(10);
-
-        JButton addButton = new JButton("Ajouter");
-        addButton.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        addButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                addMessage();
-            }
-        });
 
         JButton deleteButton = new JButton("Supprimer");
         deleteButton.setFont(new Font("Segoe UI", Font.PLAIN, 12));
@@ -57,11 +52,28 @@ public class MessageCRUDFrame extends JFrame {
             }
         });
 
+        JButton playButton = new JButton("Lire");
+        playButton.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        playButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                playMessage();
+            }
+        });
+
+        JButton backButton = new JButton("Retour");
+        backButton.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        backButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                dispose(); // Ferme la fenêtre actuelle
+                new VoiceApp().setVisible(true); // Ouvre l'interface précédente
+            }
+        });
+
         JScrollPane scrollPane = new JScrollPane();
         table = new JTable();
         table.setModel(new DefaultTableModel(
             new Object[][] {},
-            new String[] {"ID", "ID Utilisateur", "Chemin du fichier"}
+            new String[] {"ID", "Chemin du fichier"}
         ));
         table.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         table.setRowHeight(25);
@@ -78,19 +90,22 @@ public class MessageCRUDFrame extends JFrame {
                         .addGroup(gl_contentPane.createSequentialGroup()
                             .addGap(30)
                             .addGroup(gl_contentPane.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                .addComponent(userIdLabel)
+                                .addComponent(messageIdLabel)
                                 .addComponent(filePathLabel))
                             .addGap(18)
                             .addGroup(gl_contentPane.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                .addComponent(userIdField)
+                                .addComponent(messageIdField)
                                 .addComponent(filePathField, GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE))
                             .addGap(18)
                             .addGroup(gl_contentPane.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                .addComponent(addButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(deleteButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addComponent(deleteButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(playButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addGroup(gl_contentPane.createSequentialGroup()
                             .addGap(30)
-                            .addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 500, GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 500, GroupLayout.PREFERRED_SIZE))
+                        .addGroup(gl_contentPane.createSequentialGroup()
+                            .addGap(30)
+                            .addComponent(backButton, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)))
                     .addContainerGap(30, Short.MAX_VALUE))
         );
         gl_contentPane.setVerticalGroup(
@@ -100,29 +115,23 @@ public class MessageCRUDFrame extends JFrame {
                     .addComponent(titleLabel)
                     .addGap(30)
                     .addGroup(gl_contentPane.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                        .addComponent(userIdLabel)
-                        .addComponent(userIdField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addComponent(addButton))
+                        .addComponent(messageIdLabel)
+                        .addComponent(messageIdField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(deleteButton))
                     .addGap(18)
                     .addGroup(gl_contentPane.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(filePathLabel)
                         .addComponent(filePathField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addComponent(deleteButton))
+                        .addComponent(playButton))
                     .addGap(30)
                     .addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE)
+                    .addGap(18)
+                    .addComponent(backButton)
                     .addContainerGap(30, Short.MAX_VALUE))
         );
         contentPane.setLayout(gl_contentPane);
 
         // Charger les messages dans le tableau
-        loadMessages();
-    }
-
-    private void addMessage() {
-        String userId = userIdField.getText();
-        String filePath = filePathField.getText();
-        dbConnect.addMessage(userId, filePath);
-        JOptionPane.showMessageDialog(this, "Message ajouté avec succès !");
         loadMessages();
     }
 
@@ -138,12 +147,37 @@ public class MessageCRUDFrame extends JFrame {
         }
     }
 
+    private void playMessage() {
+        int selectedRow = table.getSelectedRow();
+        if (selectedRow != -1) {
+            String filePath = (String) table.getValueAt(selectedRow, 1);
+            playAudio(filePath);
+        } else {
+            JOptionPane.showMessageDialog(this, "Veuillez sélectionner un message à lire.");
+        }
+    }
+
+    private void playAudio(String filePath) {
+        try {
+            File audioFile = new File(filePath);
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioFile);
+            AudioFormat format = audioStream.getFormat();
+            DataLine.Info info = new DataLine.Info(Clip.class, format);
+            Clip audioClip = (Clip) AudioSystem.getLine(info);
+            audioClip.open(audioStream);
+            audioClip.start();
+            System.out.println("Playing file: " + filePath);
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
+            ex.printStackTrace();
+        }
+    }
+
     private void loadMessages() {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         model.setRowCount(0); // Clear existing rows
         List<Message> messages = dbConnect.getMessages("user_id_placeholder"); // Remplacez par l'ID utilisateur approprié
         for (Message message : messages) {
-            model.addRow(new Object[]{message.getId(), message.getUserId(), message.getFilePath()});
+            model.addRow(new Object[]{message.getId(), message.getFilePath()});
         }
     }
 }
