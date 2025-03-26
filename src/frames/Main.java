@@ -3,13 +3,13 @@ package frames;
 import java.awt.EventQueue;
 
 /**
- * Classe principale qui va faire apparaître 
- * l'interface graphique
+ * Point d'entrée pour permettre à notre
+ * interface graphique de s'afficher
  */
 public class Main {
 	/**
-	 * Fonction principale qui va éxécuter nos codes.
-	 * @param args
+	 * Methode consulté par le compilateur JAVA
+	 * Pour exécuter nos codes.
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {

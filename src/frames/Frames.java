@@ -124,13 +124,11 @@ public class Frames extends JFrame {
         if (userLogin.isEmpty() || userPassword.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Veuillez remplir tous les champs !", "Erreur", JOptionPane.ERROR_MESSAGE);
         } else if (authService.login(userLogin, userPassword)) {
-        	redirectToVoiceApp();
-        }
-        else {
+        	 redirectToVoiceApp(); /** Rediriger vers l'interface VoiceApp */
+        } else {
             JOptionPane.showMessageDialog(this, "Login ou mot de passe incorrect !", "Erreur", JOptionPane.ERROR_MESSAGE);
         }
     }
-    
     /**
      * Méthode pour rediriger vers l'interface CRUD.
      */
@@ -147,6 +145,10 @@ public class Frames extends JFrame {
         this.setVisible(false);
     }
     
+    /**
+     * Methode pour rediriger l'utilisateur vers
+     * l'interface d'enregistrement audio
+     */
     private void redirectToVoiceApp() {
     	new VoiceApp().setVisible(true);
     	this.setVisible(false);

@@ -7,7 +7,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
 
+/**
+ * Classe qui affiche l'interface graphique 
+ * L'utilisateur pourra enregistrer son message audio
+ */
 public class VoiceApp extends JFrame {
     private VoiceRecorder recorder = new VoiceRecorder();
     private DBConnect dbConnect = new DBConnect();
@@ -16,6 +22,10 @@ public class VoiceApp extends JFrame {
     private JLabel recordedFileLabel;
     private String currentFilePath;
 
+    /**
+     * Constructeur permettant de faire le design de l'interface
+     * utilisateur
+     */
     public VoiceApp() {
         setTitle("Voice Recorder");
         setSize(500, 400);
@@ -107,36 +117,59 @@ public class VoiceApp extends JFrame {
 
         JPanel panel = new JPanel();
         GroupLayout layout = new GroupLayout(panel);
+        layout.setHorizontalGroup(
+        	layout.createParallelGroup(Alignment.TRAILING)
+        		.addGroup(layout.createSequentialGroup()
+        			.addGroup(layout.createParallelGroup(Alignment.LEADING)
+        				.addGroup(layout.createSequentialGroup()
+        					.addGap(47)
+        					.addComponent(recordButton)
+        					.addGap(52)
+        					.addComponent(playButton)
+        					.addGap(42)
+        					.addComponent(stopButton))
+        				.addGroup(layout.createSequentialGroup()
+        					.addGap(127)
+        					.addComponent(recordingLabel))
+        				.addGroup(layout.createSequentialGroup()
+        					.addGap(127)
+        					.addComponent(recordedFileLabel))
+        				.addGroup(layout.createSequentialGroup()
+        					.addGap(29)
+        					.addComponent(crudButton)
+        					.addGap(49)
+        					.addComponent(messageCrudButton)))
+        			.addContainerGap(56, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+        	layout.createParallelGroup(Alignment.LEADING)
+        		.addGroup(layout.createSequentialGroup()
+        			.addGap(61)
+        			.addComponent(recordingLabel)
+        			.addGap(45)
+        			.addGroup(layout.createParallelGroup(Alignment.BASELINE)
+        				.addComponent(recordButton)
+        				.addComponent(playButton)
+        				.addComponent(stopButton))
+        			.addGap(40)
+        			.addComponent(recordedFileLabel)
+        			.addGap(48)
+        			.addGroup(layout.createParallelGroup(Alignment.BASELINE)
+        				.addComponent(crudButton)
+        				.addComponent(messageCrudButton))
+        			.addContainerGap(71, Short.MAX_VALUE))
+        );
         panel.setLayout(layout);
         layout.setAutoCreateGaps(true);
         layout.setAutoCreateContainerGaps(true);
 
-        layout.setHorizontalGroup(
-            layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-                    .addComponent(recordButton)
-                    .addComponent(stopButton)
-                    .addComponent(playButton)
-                    .addComponent(crudButton)
-                    .addComponent(messageCrudButton)
-                    .addComponent(recordingLabel)
-                    .addComponent(recordedFileLabel))
-        );
-
-        layout.setVerticalGroup(
-            layout.createSequentialGroup()
-                .addComponent(recordButton)
-                .addComponent(stopButton)
-                .addComponent(playButton)
-                .addComponent(crudButton)
-                .addComponent(messageCrudButton)
-                .addComponent(recordingLabel)
-                .addComponent(recordedFileLabel)
-        );
-
-        add(panel);
+        getContentPane().add(panel);
     }
 
+    /**
+     * Methode qui lance l'écoute d'un message audio 
+     * @param filePath
+     */
     private void playAudio(String filePath) {
         try {
             File audioFile = new File(filePath);
@@ -152,6 +185,10 @@ public class VoiceApp extends JFrame {
         }
     }
 
+    /**
+     * Methode qui invoque l'interface d'enregistrement audio
+     * @param args
+     */
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override

@@ -6,12 +6,22 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * Classe qui permet l'action de lancer un 
+ * enregistrement audio
+ */
 public class VoiceRecorder {
     private static final int RECORD_TIME = 60000; // 1 minute
+
     private TargetDataLine line;
     private Thread recordingThread;
     private boolean isRecording = false;
 
+    /**
+     * Methode qui indique que l'application
+     * commence un enregistrement
+     * @param filePath
+     */
     public void startRecording(String filePath) {
         File audioFile = new File(filePath);
         AudioFormat format = new AudioFormat(16000, 16, 2, true, true);
@@ -44,6 +54,9 @@ public class VoiceRecorder {
         }
     }
 
+    /**
+     * Methode qui arrête l'enregistrement audio
+     */
     public void stopRecording() {
         if (line != null) {
             line.stop();
@@ -61,10 +74,19 @@ public class VoiceRecorder {
         }
     }
 
+    /**
+     * Juste une méthode qui va indiquer que l'application
+     * est entrain d'enregistrer
+     * @return
+     */
     public boolean isRecording() {
         return isRecording;
     }
 
+    /**
+     * Methode qui va générer formater le fichier audio
+     * @return true quand la sauvegarde du fichier a été un succès
+     */
     public static String generateFilePath() {
         String timestamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
         return "recorded_audio_" + timestamp + ".wav";

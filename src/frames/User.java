@@ -1,10 +1,21 @@
 package frames;
 
+/**
+ * Classe qui permet la manipulation des 
+ * utilisateurs de l'application
+ */
 public class User {
     private int id;
     private String username;
     private String password;
 
+    /**
+     * Constructeur de la classe pour
+     * faciliter la manipulation des données utilisateurs
+     * @param id
+     * @param username
+     * @param password
+     */
     public User(int id, String username, String password) {
         this.id = id;
         this.username = username;

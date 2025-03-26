@@ -11,6 +11,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Classe qui affiche l'interface graphique 
+ * où l'utilisateur peut faire des actions sur les messages enregistrés
+ */
 public class MessageCRUDFrame extends JFrame {
     private static final long serialUID = 1L;
     private JPanel contentPane;
@@ -19,6 +23,9 @@ public class MessageCRUDFrame extends JFrame {
     private JTable table;
     private DBConnect dbConnect = new DBConnect();
 
+    /**
+     * Constructeur de la classe qui crée l'interface graphique
+     */
     public MessageCRUDFrame() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 600, 400);
@@ -131,10 +138,14 @@ public class MessageCRUDFrame extends JFrame {
         );
         contentPane.setLayout(gl_contentPane);
 
-        // Charger les messages dans le tableau
+        /** Charger les messages dans le tableau */
         loadMessages();
     }
 
+    /**
+     * Metohde de classe qui va supprimer un message
+     * qui était enregistré dans l'application
+     */
     private void deleteMessage() {
         int selectedRow = table.getSelectedRow();
         if (selectedRow != -1) {
@@ -147,6 +158,10 @@ public class MessageCRUDFrame extends JFrame {
         }
     }
 
+    /**
+     * Methode qui va lire le message enregistré 
+     * étant séléctioné
+     */
     private void playMessage() {
         int selectedRow = table.getSelectedRow();
         if (selectedRow != -1) {
@@ -156,7 +171,11 @@ public class MessageCRUDFrame extends JFrame {
             JOptionPane.showMessageDialog(this, "Veuillez sélectionner un message à lire.");
         }
     }
-
+    
+    /**
+     * Methode qui lance l'écoute d'un message audio 
+     * @param filePath
+     */
     private void playAudio(String filePath) {
         try {
             File audioFile = new File(filePath);
@@ -172,6 +191,10 @@ public class MessageCRUDFrame extends JFrame {
         }
     }
 
+    /**
+     * Methode qui charge les messages enregistés dans l'application
+     * dans un tableau
+     */
     private void loadMessages() {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         model.setRowCount(0); // Clear existing rows
