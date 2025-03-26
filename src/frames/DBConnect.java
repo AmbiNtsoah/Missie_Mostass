@@ -241,4 +241,59 @@ public class DBConnect implements AuthService {
             throw new CustomException("Erreur de réinitialisation du mot de passe");
         }
     }
+    
+    /**
+     *  Méthode pour ajouter des messages
+     * @param id
+     */
+    public void addMessage(String userId, String filePath) {
+        String sql = "INSERT INTO messages(user_id, file_path) VALUES(?, ?)";
+        try (Connection conn = DriverManager.getConnection(URL);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, userId);
+            pstmt.setString(2, filePath);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new CustomException("Erreur d'enregistrement dans la base de données");
+        }
+    }
+    
+    /**
+     *  Méthode pour lister les messages
+     * @param id
+     */
+    public List<Message> getMessages(String userId) {
+        List<Message> messages = new ArrayList<>();
+        String sql = "SELECT * FROM messages WHERE user_id = ?";
+        try (Connection conn = DriverManager.getConnection(URL);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, userId);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                messages.add(new Message(rs.getInt("id"), rs.getString("user_id"), rs.getString("file_path")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new CustomException("Erreur de lecture de la base de données");
+        }
+        return messages;
+    }
+
+    /**
+     *  Méthode pour supprimer les messages
+     * @param id
+     */
+    public void deleteMessage(int id) {
+        String sql = "DELETE FROM messages WHERE id = ?";
+        try (Connection conn = DriverManager.getConnection(URL);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new CustomException("Erreur de suppression de la base de données");
+        }
+    }
+
 }

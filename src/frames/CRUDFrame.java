@@ -38,7 +38,7 @@ public class CRUDFrame extends JFrame {
      */
     public CRUDFrame() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 600, 450);
+        setBounds(100, 100, 600, 684);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
@@ -116,72 +116,92 @@ public class CRUDFrame extends JFrame {
         table.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         table.setRowHeight(25);
         scrollPane.setViewportView(table);
+        
+        JButton retourButton = new JButton("Retour");
+        retourButton.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		redirectPrevious();
+        	}
+        });
 
         GroupLayout gl_contentPane = new GroupLayout(contentPane);
         gl_contentPane.setHorizontalGroup(
-            gl_contentPane.createParallelGroup(Alignment.LEADING)
-                .addGroup(gl_contentPane.createSequentialGroup()
-                    .addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-                        .addGroup(gl_contentPane.createSequentialGroup()
-                            .addGap(200)
-                            .addComponent(titleLabel, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE))
-                        .addGroup(gl_contentPane.createSequentialGroup()
-                            .addGap(30)
-                            .addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-                                .addComponent(idLabel)
-                                .addComponent(usernameLabel)
-                                .addComponent(passwordLabel)
-                                .addComponent(newPasswordLabel))
-                            .addGap(18)
-                            .addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
-                                .addComponent(idField)
-                                .addComponent(usernameField)
-                                .addComponent(passwordField)
-                                .addComponent(newPasswordField, GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE))
-                            .addGap(18)
-                            .addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
-                                .addComponent(addButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(updateButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(deleteButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(resetPasswordButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addGroup(gl_contentPane.createSequentialGroup()
-                            .addGap(30)
-                            .addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 500, GroupLayout.PREFERRED_SIZE)))
-                    .addContainerGap(30, Short.MAX_VALUE))
+        	gl_contentPane.createParallelGroup(Alignment.LEADING)
+        		.addGroup(gl_contentPane.createSequentialGroup()
+        			.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+        				.addGroup(gl_contentPane.createSequentialGroup()
+        					.addGap(200)
+        					.addComponent(titleLabel, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE))
+        				.addGroup(gl_contentPane.createSequentialGroup()
+        					.addGap(30)
+        					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+        						.addComponent(idLabel)
+        						.addComponent(usernameLabel)
+        						.addComponent(passwordLabel)
+        						.addComponent(newPasswordLabel))
+        					.addGap(18)
+        					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
+        						.addComponent(idField)
+        						.addComponent(usernameField)
+        						.addComponent(passwordField)
+        						.addComponent(newPasswordField, GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE))
+        					.addGap(18)
+        					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
+        						.addComponent(addButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        						.addComponent(updateButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        						.addComponent(deleteButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        						.addComponent(resetPasswordButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+        				.addGroup(gl_contentPane.createSequentialGroup()
+        					.addGap(30)
+        					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+        						.addComponent(retourButton)
+        						.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 500, GroupLayout.PREFERRED_SIZE))))
+        			.addContainerGap(46, Short.MAX_VALUE))
         );
         gl_contentPane.setVerticalGroup(
-            gl_contentPane.createParallelGroup(Alignment.LEADING)
-                .addGroup(gl_contentPane.createSequentialGroup()
-                    .addGap(30)
-                    .addComponent(titleLabel)
-                    .addGap(30)
-                    .addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-                        .addComponent(idLabel)
-                        .addComponent(idField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addComponent(addButton))
-                    .addGap(18)
-                    .addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-                        .addComponent(usernameLabel)
-                        .addComponent(usernameField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addComponent(updateButton))
-                    .addGap(18)
-                    .addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-                        .addComponent(passwordLabel)
-                        .addComponent(passwordField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addComponent(deleteButton))
-                    .addGap(18)
-                    .addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-                        .addComponent(newPasswordLabel)
-                        .addComponent(newPasswordField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addComponent(resetPasswordButton))
-                    .addGap(30)
-                    .addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(30, Short.MAX_VALUE))
+        	gl_contentPane.createParallelGroup(Alignment.LEADING)
+        		.addGroup(gl_contentPane.createSequentialGroup()
+        			.addGap(30)
+        			.addComponent(titleLabel)
+        			.addGap(30)
+        			.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+        				.addComponent(idLabel)
+        				.addComponent(idField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+        				.addComponent(addButton))
+        			.addGap(18)
+        			.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+        				.addComponent(usernameLabel)
+        				.addComponent(usernameField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+        				.addComponent(updateButton))
+        			.addGap(18)
+        			.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+        				.addComponent(passwordLabel)
+        				.addComponent(passwordField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+        				.addComponent(deleteButton))
+        			.addGap(18)
+        			.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+        				.addComponent(newPasswordLabel)
+        				.addComponent(newPasswordField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+        				.addComponent(resetPasswordButton))
+        			.addGap(30)
+        			.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE)
+        			.addGap(18)
+        			.addComponent(retourButton)
+        			.addContainerGap(122, Short.MAX_VALUE))
         );
         contentPane.setLayout(gl_contentPane);
 
         // Charger les utilisateurs dans le tableau
         loadUsers();
+    }
+    
+    /**
+     * Methode pour retourner à l'interface précédente
+     */
+    private void redirectPrevious() {
+    	VoiceApp recordFrame = new VoiceApp();
+    	recordFrame.setVisible(true);
+    	this.setVisible(false);
     }
 
     /**
