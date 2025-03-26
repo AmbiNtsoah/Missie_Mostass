@@ -138,7 +138,7 @@ public class MessageCRUDFrame extends JFrame {
         );
         contentPane.setLayout(gl_contentPane);
 
-        // Charger les messages dans le tableau
+        /** Charger les messages dans le tableau */
         loadMessages();
     }
 
