@@ -124,7 +124,7 @@ public class Frames extends JFrame {
         if (userLogin.isEmpty() || userPassword.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Veuillez remplir tous les champs !", "Erreur", JOptionPane.ERROR_MESSAGE);
         } else if (authService.login(userLogin, userPassword)) {
-        	redirectToCRUD();
+        	redirectToVoiceApp();
         }
         else {
             JOptionPane.showMessageDialog(this, "Login ou mot de passe incorrect !", "Erreur", JOptionPane.ERROR_MESSAGE);
@@ -145,5 +145,10 @@ public class Frames extends JFrame {
     private void redirectSignUp() {
         new SignUpFrame().setVisible(true);
         this.setVisible(false);
+    }
+    
+    private void redirectToVoiceApp() {
+    	new VoiceApp().setVisible(true);
+    	this.setVisible(false);
     }
 }
