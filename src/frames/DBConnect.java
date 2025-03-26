@@ -30,9 +30,7 @@ public class DBConnect implements AuthService {
                     pstmt.execute();
                 }
                 
-             /**
-              *  Création de la table messages
-              */
+             // Création de la table messages
                 String createMessagesTableSQL = "CREATE TABLE IF NOT EXISTS messages ("
                         + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                         + "user_id INTEGER NOT NULL,"
