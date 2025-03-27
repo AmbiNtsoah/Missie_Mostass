@@ -7,6 +7,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
@@ -15,8 +18,8 @@ import javax.swing.LayoutStyle.ComponentPlacement;
  * L'utilisateur pourra enregistrer son message audio
  */
 public class VoiceApp extends JFrame {
-    private VoiceRecorder recorder = new VoiceRecorder();
-    private DBConnect dbConnect = new DBConnect();
+	private DBConnect dbConnect = new DBConnect();
+    private VoiceRecorder recorder = new VoiceRecorder(dbConnect);
     private JLabel recordingLabel;
     private JButton playButton;
     private JLabel recordedFileLabel;
@@ -81,14 +84,27 @@ public class VoiceApp extends JFrame {
         stopButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                recorder.stopRecording();
-                recordingLabel.setVisible(false);
-                playButton.setEnabled(true);
-                recordedFileLabel.setText("Fichier enregistré:" + currentFilePath);
-                recordedFileLabel.setVisible(true);
-                String userId = "user_id_placeholder"; // Remplacez par l'ID utilisateur approprié
-                String filePath = currentFilePath;
-                dbConnect.addMessage(userId, filePath);
+                try {
+                    System.out.println("Arrêt de l'enregistrement...");
+                    recorder.stopRecording(currentFilePath); // Passer currentFilePath à stopRecording
+                    System.out.println("Enregistrement arrêté.");
+                    recordingLabel.setVisible(false);
+                    playButton.setEnabled(true);
+                    recordedFileLabel.setText("Fichier enregistré: " + currentFilePath + ".enc");
+                    recordedFileLabel.setVisible(true);
+                    String userId = "user_id_placeholder"; // Remplacez par l'ID utilisateur approprié
+                    String filePath = currentFilePath + ".enc";
+
+                    // Générer et stocker le hachage SHA-256 du fichier chiffré
+                    byte[] fileContent = Files.readAllBytes(Paths.get(filePath));
+                    String fileHash = HashUtils.hashFile(fileContent);
+
+                    dbConnect.addMessage(userId, filePath, fileHash);
+                    System.out.println("Message ajouté à la base de données.");
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(null, "Erreur lors de l'arrêt de l'enregistrement : " + ex.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
 
@@ -173,6 +189,7 @@ public class VoiceApp extends JFrame {
     private void playAudio(String filePath) {
         try {
             File audioFile = new File(filePath);
+            recorder.decryptFile(audioFile); // Déchiffrer le fichier avant la lecture
             AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioFile);
             AudioFormat format = audioStream.getFormat();
             DataLine.Info info = new DataLine.Info(Clip.class, format);
@@ -182,6 +199,23 @@ public class VoiceApp extends JFrame {
             System.out.println("Playing file: " + filePath);
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
             ex.printStackTrace();
+           JOptionPane.showMessageDialog(null, "Erreur lors de la lecture du fichier audio : " + ex.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    public void stopRecording() {
+        try {
+            recorder.stopRecording(currentFilePath);
+            String filePath = currentFilePath + ".enc";
+            byte[] fileContent = Files.readAllBytes(Paths.get(filePath));
+            String fileHash = HashUtils.hashFile(fileContent);
+
+            String userId = "user_id_placeholder"; // Remplacez par l'ID utilisateur approprié
+            dbConnect.addMessage(userId, filePath, fileHash);
+            System.out.println("Message ajouté à la base de données avec le hachage du fichier.");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Erreur lors de l'arrêt de l'enregistrement : " + ex.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
         }
     }
 

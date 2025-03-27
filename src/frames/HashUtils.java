@@ -27,7 +27,15 @@ public class HashUtils {
         }
     }
 
-    
+    public static String hashFile(byte[] fileContent) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] hash = md.digest(fileContent);
+            return byteArrayToHexString(hash);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
     /**
      * Méthode pour convertir un tableau de bytes en chaîne hexadécimale.
      * 
