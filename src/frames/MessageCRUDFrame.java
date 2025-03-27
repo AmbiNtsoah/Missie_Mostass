@@ -3,18 +3,17 @@ package frames;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.crypto.SecretKey;
 import javax.sound.sampled.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.Connection;
 import java.util.List;
 
-/**
- * Classe qui affiche l'interface graphique 
- * où l'utilisateur peut faire des actions sur les messages enregistrés
- */
 public class MessageCRUDFrame extends JFrame {
     private static final long serialUID = 1L;
     private JPanel contentPane;
@@ -22,10 +21,8 @@ public class MessageCRUDFrame extends JFrame {
     private JTextField filePathField;
     private JTable table;
     private DBConnect dbConnect = new DBConnect();
+    private VoiceRecorder recorder = new VoiceRecorder(dbConnect);
 
-    /**
-     * Constructeur de la classe qui crée l'interface graphique
-     */
     public MessageCRUDFrame() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 600, 400);
@@ -44,7 +41,7 @@ public class MessageCRUDFrame extends JFrame {
         messageIdField.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         messageIdField.setColumns(10);
 
-        JLabel filePathLabel = new JLabel("Chemin du fichier:");
+        JLabel filePathLabel = new JLabel("audio:");
         filePathLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 
         filePathField = new JTextField();
@@ -138,14 +135,10 @@ public class MessageCRUDFrame extends JFrame {
         );
         contentPane.setLayout(gl_contentPane);
 
-        /** Charger les messages dans le tableau */
+        // Charger les messages dans le tableau
         loadMessages();
     }
 
-    /**
-     * Metohde de classe qui va supprimer un message
-     * qui était enregistré dans l'application
-     */
     private void deleteMessage() {
         int selectedRow = table.getSelectedRow();
         if (selectedRow != -1) {
@@ -158,10 +151,6 @@ public class MessageCRUDFrame extends JFrame {
         }
     }
 
-    /**
-     * Methode qui va lire le message enregistré 
-     * étant séléctioné
-     */
     private void playMessage() {
         int selectedRow = table.getSelectedRow();
         if (selectedRow != -1) {
@@ -171,14 +160,15 @@ public class MessageCRUDFrame extends JFrame {
             JOptionPane.showMessageDialog(this, "Veuillez sélectionner un message à lire.");
         }
     }
-    
-    /**
-     * Methode qui lance l'écoute d'un message audio 
-     * @param filePath
-     */
+
     private void playAudio(String filePath) {
         try {
             File audioFile = new File(filePath);
+            if (!audioFile.exists()) {
+                throw new FileNotFoundException("Le fichier spécifié est introuvable: " + filePath);
+            }
+            recorder.decryptFilehash(audioFile); // Déchiffrer le fichier avant la lecture
+
             AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioFile);
             AudioFormat format = audioStream.getFormat();
             DataLine.Info info = new DataLine.Info(Clip.class, format);
@@ -188,13 +178,10 @@ public class MessageCRUDFrame extends JFrame {
             System.out.println("Playing file: " + filePath);
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
             ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Erreur lors de la lecture du fichier audio : " + ex.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    /**
-     * Methode qui charge les messages enregistés dans l'application
-     * dans un tableau
-     */
     private void loadMessages() {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         model.setRowCount(0); // Clear existing rows
@@ -203,4 +190,5 @@ public class MessageCRUDFrame extends JFrame {
             model.addRow(new Object[]{message.getId(), message.getFilePath()});
         }
     }
+    
 }

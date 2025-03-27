@@ -1,31 +1,19 @@
 package frames;
 
-/**
- * Classe utilie pour la manipulation des messages 
- * audio dans l'application
- */
 public class Message {
     private int id;
     private String userId;
     private String filePath;
+    private String fileHash;
 
-    /**
-     * Constructeur qui permet de créer et manipuler les 
-     * messages
-     * @param id du message
-     * @param userId de l'utilisateur ayant fait l'enregistrement
-     * @param filePath le chemin du message
-     */
-    public Message(int id, String userId, String filePath) {
+    public Message(int id, String userId, String filePath, String filehash) {
         this.id = id;
         this.userId = userId;
         this.filePath = filePath;
+        this.fileHash = fileHash;
     }
 
-    /**
-     * Getters et setters des attributs privées
-     * @return
-     */
+    // Getters et setters
     public int getId() {
         return id;
     }
@@ -49,4 +37,13 @@ public class Message {
     public void setFilePath(String filePath) {
         this.filePath = filePath;
     }
+    
+    public String getFileHash() {
+        return fileHash;
+    }
+    
+    public void setFileHash(String fileHash) {
+        this.fileHash = fileHash;
+    }
+    
 }
