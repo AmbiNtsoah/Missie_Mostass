@@ -29,44 +29,52 @@ public class DBConnect implements AuthService {
      * Crée la table si elle n'éxiste pas encore
      * */
     public DBConnect() {
-        try (Connection conn = DriverManager.getConnection(URL)) {
-            if (conn != null) {
-                String createTableSQL = "CREATE TABLE IF NOT EXISTS users ("
-                        + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                        + "username TEXT NOT NULL,"
-                        + "password TEXT NOT NULL"
-                        + ");";
-                try (PreparedStatement pstmt = conn.prepareStatement(createTableSQL)) {
-                    pstmt.execute();
-                }
-                
-                String createMessagesTableSQL = "CREATE TABLE IF NOT EXISTS messages ("
-                        + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                        + "user_id INTEGER NOT NULL,"
-                        + "file_path TEXT NOT NULL,"
-                        + "file_hash TEXT NOT NULL," // Ajout de la colonne file_hash
-                        + "FOREIGN KEY (user_id) REFERENCES users(id)"
-                        + ");";
-                try (PreparedStatement pstmt = conn.prepareStatement(createMessagesTableSQL)) {
-                    pstmt.execute();
-                }
-                
-             // Création de la table keys
-                String createKeysTableSQL = "CREATE TABLE IF NOT EXISTS keys ("
-                        + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                        + "key TEXT NOT NULL"
-                        + ");";
-                try (PreparedStatement pstmt = conn.prepareStatement(createKeysTableSQL)) {
-                    pstmt.execute();
-                }
-
-                // Génération de la clé secrète
-                generateSecretKey();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+    	try {
+            // Charger explicitement le driver SQLite
+            Class.forName("org.sqlite.JDBC");
+	        try (Connection conn = DriverManager.getConnection(URL)) {
+	            if (conn != null) {
+	                String createTableSQL = "CREATE TABLE IF NOT EXISTS users ("
+	                        + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+	                        + "username TEXT NOT NULL,"
+	                        + "password TEXT NOT NULL"
+	                        + ");";
+	                try (PreparedStatement pstmt = conn.prepareStatement(createTableSQL)) {
+	                    pstmt.execute();
+	                }
+	                
+	                String createMessagesTableSQL = "CREATE TABLE IF NOT EXISTS messages ("
+	                        + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+	                        + "user_id INTEGER NOT NULL,"
+	                        + "file_path TEXT NOT NULL,"
+	                        + "file_hash TEXT NOT NULL," // Ajout de la colonne file_hash
+	                        + "FOREIGN KEY (user_id) REFERENCES users(id)"
+	                        + ");";
+	                try (PreparedStatement pstmt = conn.prepareStatement(createMessagesTableSQL)) {
+	                    pstmt.execute();
+	                }
+	                
+	             // Création de la table keys
+	                String createKeysTableSQL = "CREATE TABLE IF NOT EXISTS keys ("
+	                        + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+	                        + "key TEXT NOT NULL"
+	                        + ");";
+	                try (PreparedStatement pstmt = conn.prepareStatement(createKeysTableSQL)) {
+	                    pstmt.execute();
+	                }
+	
+	                // Génération de la clé secrète
+	                generateSecretKey();
+	            }
+	        }
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }catch (ClassNotFoundException e) {
+	            System.err.println("Driver JDBC non trouvé : " + e.getMessage());
+	        }
+    	}
+    
+    
 
     /**
      * Methode pour permettre la connexion utilisateurs déjà inscrit
