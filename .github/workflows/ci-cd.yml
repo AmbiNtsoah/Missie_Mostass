@@ -13,36 +13,39 @@ jobs:
     runs-on: windows-latest
 
     steps:
+      # Étape 1: Vérification du dépôt
       - name: Checkout du dépôt
         uses: actions/checkout@v4
 
+      # Étape 2: Créer le répertoire build
       - name: Créer le répertoire build
         run: mkdir build
 
+      # Étape 3: Télécharger les dépendances JUnit
       - name: Télécharger les dépendances JUnit
         run: |
           curl -L -o junit-platform-console-standalone.jar https://repo.maven.apache.org/maven2/org/junit/platform/junit-platform-console-standalone/1.7.1/junit-platform-console-standalone-1.7.1.jar
           curl -L -o junit-jupiter-api.jar https://repo.maven.apache.org/maven2/org/junit/jupiter/junit-jupiter-api/5.9.2/junit-jupiter-api-5.9.2.jar
           curl -L -o junit-jupiter-engine.jar https://repo.maven.apache.org/maven2/org/junit/jupiter/junit-jupiter-engine/5.9.2/junit-jupiter-engine-5.9.2.jar
 
+      # Étape 4: Télécharger le driver SQLite JDBC
       - name: Télécharger le pilote SQLite JDBC
-        run: |
-          curl -L -o sqlite-jdbc.jar https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/3.36.0.3/sqlite-jdbc-3.36.0.3.jar
+        run: curl -L -o sqlite-jdbc.jar https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/3.36.0.3/sqlite-jdbc-3.36.0.3.jar
 
-      - name: Vérifier le fichier SQLite téléchargé
-        run: |
-          Get-ChildItem -Path sqlite-jdbc.jar | Format-List
-
+      # Étape 5: Vérifier les fichiers téléchargés
       - name: Vérifier les fichiers téléchargés
         run: dir
 
+      # Étape 6: Compiler les fichiers Java
       - name: Compiler les fichiers Java
         run: |
-          javac -cp ".;build;sqlite-jdbc.jar;junit-platform-console-standalone.jar;junit-jupiter-api.jar;junit-jupiter-engine.jar" -d build src\frames\*.java
+          javac -cp ".;junit-platform-console-standalone.jar;junit-jupiter-api.jar;junit-jupiter-engine.jar;sqlite-jdbc.jar" -d build src/frames/*.java
 
+      # Étape 7: Exécuter les tests unitaires
       - name: Exécuter les tests unitaires
         run: |
-          java -cp ".;build;sqlite-jdbc.jar;junit-platform-console-standalone.jar;junit-jupiter-api.jar;junit-jupiter-engine.jar" org.junit.platform.console.ConsoleLauncher --scan-classpath
+          java -cp ".;build;junit-platform-console-standalone.jar;junit-jupiter-api.jar;junit-jupiter-engine.jar;sqlite-jdbc.jar" org.junit.platform.console.ConsoleLauncher --scan-classpath
 
+      # Étape 8: Déploiement local
       - name: Déploiement local
         run: .\deploy.bat
