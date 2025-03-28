@@ -17,38 +17,44 @@ jobs:
       - name: Checkout du dépôt
         uses: actions/checkout@v4
 
-      # Étape 2: Créer le répertoire build
+      # Étape 2: Installer Java 17
+      - name: Installer Java 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'adoptopenjdk'
+
+      # Étape 3: Créer le répertoire build
       - name: Créer le répertoire build
         run: mkdir build
 
-      # Étape 3: Télécharger les dépendances JUnit
+      # Étape 4: Télécharger les dépendances JUnit
       - name: Télécharger les dépendances JUnit
         run: |
           curl -L -o junit-platform-console-standalone.jar https://repo.maven.apache.org/maven2/org/junit/platform/junit-platform-console-standalone/1.7.1/junit-platform-console-standalone-1.7.1.jar
           curl -L -o junit-jupiter-api.jar https://repo.maven.apache.org/maven2/org/junit/jupiter/junit-jupiter-api/5.9.2/junit-jupiter-api-5.9.2.jar
           curl -L -o junit-jupiter-engine.jar https://repo.maven.apache.org/maven2/org/junit/jupiter/junit-jupiter-engine/5.9.2/junit-jupiter-engine-5.9.2.jar
 
-      # Étape 4: Télécharger le pilote SQLite JDBC
+      # Étape 5: Télécharger le pilote SQLite JDBC
       - name: Télécharger le pilote SQLite JDBC
         run: |
           curl -L -o sqlite-jdbc.jar https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/3.36.0.3/sqlite-jdbc-3.36.0.3.jar
 
-      # Étape 5: Vérifier les fichiers téléchargés
+      # Étape 6: Vérifier les fichiers téléchargés
       - name: Vérifier les fichiers téléchargés
         run: dir
 
-      # Étape 6: Compiler les fichiers Java
+      # Étape 7: Compiler les fichiers Java
       - name: Compiler les fichiers Java
         run: |
           javac -cp ".;junit-platform-console-standalone.jar;junit-jupiter-api.jar;junit-jupiter-engine.jar;sqlite-jdbc.jar" -d build src\frames\*.java
 
-      # Étape 7: Exécuter les tests unitaires
+      # Étape 8: Exécuter les tests unitaires
       - name: Exécuter les tests unitaires
         run: |
           java -cp ".;build;junit-platform-console-standalone.jar;junit-jupiter-api.jar;junit-jupiter-engine.jar;sqlite-jdbc.jar" org.junit.platform.console.ConsoleLauncher --scan-classpath
 
-      # Étape 8: Déploiement local (exécution du fichier JAR login.jar situé dans src/)
+      # Étape 9: Déploiement local (exécution du fichier JAR login.jar situé dans src/)
       - name: Exécuter l'application login.jar
         run: |
           java -D"java.library.path=." -cp ".;build;junit-platform-console-standalone.jar;junit-jupiter-api.jar;junit-jupiter-engine.jar;sqlite-jdbc.jar" -jar src/login.jar
-
