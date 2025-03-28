@@ -18,6 +18,7 @@ jobs:
         uses: actions/checkout@v4
 
       # Étape 2: Créer le répertoire build
+      - name: Créer le répertoire build
         run: mkdir build
 
       # Étape 3: Télécharger les dépendances JUnit
@@ -39,7 +40,7 @@ jobs:
       # Étape 6: Compiler les fichiers Java
       - name: Compiler les fichiers Java
         run: |
-          javac -cp ".;junit-platform-console-standalone.jar;junit-jupiter-api.jar;junit-jupiter-engine.jar;sqlite-jdbc.jar" -d build src\frames\*.java
+          javac -cp ".;build;junit-platform-console-standalone.jar;junit-jupiter-api.jar;junit-jupiter-engine.jar;sqlite-jdbc.jar" -d build src\frames\*.java
 
       # Étape 7: Exécuter les tests unitaires
       - name: Exécuter les tests unitaires
@@ -49,4 +50,4 @@ jobs:
       # Étape 8: Déploiement local
       - name: Déploiement local
         run: |
-          java -cp ".;sqlite-jdbc.jar" -Djava.library.path=. -jar deploy.bat
+          java -cp ".;build;junit-platform-console-standalone.jar;junit-jupiter-api.jar;junit-jupiter-engine.jar;sqlite-jdbc.jar" -Djava.library.path=. -jar deploy.bat
