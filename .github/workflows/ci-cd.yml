@@ -1,4 +1,3 @@
-
 name: CI/CD Pipeline (Windows)
 
 on:
@@ -20,13 +19,17 @@ jobs:
       - name: Créer le répertoire build
         run: mkdir build
 
+      - name: Télécharger les dépendances JUnit
+        run: |
+          curl -L -o junit-platform-console-standalone.jar https://repo.maven.apache.org/maven2/org/junit/platform/junit-platform-console-standalone/1.7.1/junit-platform-console-standalone-1.7.1.jar
+
       - name: Compiler les fichiers Java
         run: |
-          javac -cp "lib/*" -d build src\frames\*.java
+          javac -cp "lib/*;junit-platform-console-standalone-1.7.1.jar" -d build src\frames\*.java
 
       - name: Exécuter les tests unitaires
         run: |
-          java -cp "build;lib/*" org.junit.platform.console.ConsoleLauncher --scan-classpath
+          java -cp "build;lib/*;junit-platform-console-standalone-1.7.1.jar" org.junit.platform.console.ConsoleLauncher --scan-classpath
 
       - name: Déploiement local
         run: .\deploy.bat
