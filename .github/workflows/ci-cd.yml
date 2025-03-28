@@ -51,3 +51,4 @@ jobs:
       - name: Exécuter l'application login.jar
         run: |
           java -Djava.library.path=. -cp ".;build;junit-platform-console-standalone.jar;junit-jupiter-api.jar;junit-jupiter-engine.jar;sqlite-jdbc.jar" -jar src/login.jar
+
