@@ -17,12 +17,12 @@ jobs:
       - name: Checkout du dépôt
         uses: actions/checkout@v4
 
-      # Étape 2: Installer Java 17
+      # Étape 2: Installer Java 17 (temurin)
       - name: Installer Java 17
         uses: actions/setup-java@v3
         with:
           java-version: '17'
-          distribution: 'adoptopenjdk'
+          distribution: 'temurin'
 
       # Étape 3: Créer le répertoire build
       - name: Créer le répertoire build
