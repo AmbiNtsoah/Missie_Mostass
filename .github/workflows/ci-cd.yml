@@ -47,7 +47,7 @@ jobs:
       # Étape 7: Compiler les fichiers Java
       - name: Compiler les fichiers Java
         run: |
-          javac --release 8 -cp ".;junit-platform-console-standalone.jar;junit-jupiter-api.jar;junit-jupiter-engine.jar;sqlite-jdbc.jar" -d build src\frames\*.java
+          javac --release 17 -cp ".;junit-platform-console-standalone.jar;junit-jupiter-api.jar;junit-jupiter-engine.jar;sqlite-jdbc.jar" -d build src\frames\*.java
 
       # Étape 8: Exécuter les tests unitaires
       - name: Exécuter les tests unitaires
