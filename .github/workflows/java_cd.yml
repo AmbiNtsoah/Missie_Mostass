@@ -27,20 +27,13 @@ jobs:
       - name: Vérifier les fichiers téléchargés
         run: dir
 
-      - name: Compiler le projet
-        run: javac -d build src/**/*.java
+      - name: Compiler les fichiers Java
+        run: |
+          javac -cp ".;junit-platform-console-standalone.jar;junit-jupiter-api.jar;junit-jupiter-engine.jar" -d build src\frames\*.java
 
-      - name: Exécuter les tests JUnit
-        run: java -jar junit-platform-console-standalone.jar --class-path build --scan-class-path
-
-      - name: Créer un JAR exécutable
-        run: jar cvf build/app.jar -C build .
-
-      - name: Sauvegarder l’artefact
-        uses: actions/upload-artifact@v4
-        with:
-          name: application
-          path: build/app.jar
+      - name: Exécuter les tests unitaires
+        run: |
+          java -cp ".;build;junit-platform-console-standalone.jar;junit-jupiter-api.jar;junit-jupiter-engine.jar" org.junit.platform.console.ConsoleLauncher --scan-classpath
 
   deploy:
     needs: build
