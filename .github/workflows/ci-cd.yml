@@ -28,8 +28,10 @@ jobs:
       - name: Télécharger le pilote SQLite JDBC
         run: |
           curl -L -o sqlite-jdbc.jar https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/3.36.0.3/sqlite-jdbc-3.36.0.3.jar
-          ls -lh sqlite-jdbc.jar  # Vérifie la taille du fichier
-          file sqlite-jdbc.jar    # Vérifie le type du fichier
+
+      - name: Vérifier le fichier SQLite téléchargé
+        run: |
+          Get-ChildItem -Path sqlite-jdbc.jar | Format-List
 
       - name: Vérifier les fichiers téléchargés
         run: dir
