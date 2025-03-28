@@ -1,0 +1,32 @@
+
+name: CI/CD Pipeline (Windows)
+
+on:
+  push:
+    branches:
+      - developper_2
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout du dépôt
+        uses: actions/checkout@v4
+
+      - name: Créer le répertoire build
+        run: mkdir build
+
+      - name: Compiler les fichiers Java
+        run: |
+          javac -cp "lib/*" -d build src\frames\*.java
+
+      - name: Exécuter les tests unitaires
+        run: |
+          java -cp "build;lib/*" org.junit.platform.console.ConsoleLauncher --scan-classpath
+
+      - name: Déploiement local
+        run: .\deploy.bat
