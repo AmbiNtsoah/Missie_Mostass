@@ -26,18 +26,21 @@ jobs:
           curl -L -o junit-jupiter-engine.jar https://repo.maven.apache.org/maven2/org/junit/jupiter/junit-jupiter-engine/5.9.2/junit-jupiter-engine-5.9.2.jar
 
       - name: Télécharger le pilote SQLite JDBC
-        run: curl -L -o sqlite-jdbc.jar https://bitbucket.org/xerial/sqlite-jdbc/downloads/sqlite-jdbc-3.34.0.jar
+        run: |
+          curl -L -o sqlite-jdbc.jar https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/3.36.0.3/sqlite-jdbc-3.36.0.3.jar
+          ls -lh sqlite-jdbc.jar  # Vérifie la taille du fichier
+          file sqlite-jdbc.jar    # Vérifie le type du fichier
 
       - name: Vérifier les fichiers téléchargés
         run: dir
 
       - name: Compiler les fichiers Java
         run: |
-          javac -cp ".;junit-platform-console-standalone.jar;junit-jupiter-api.jar;junit-jupiter-engine.jar;sqlite-jdbc.jar" -d build src\frames\*.java
+          javac -cp ".;build;sqlite-jdbc.jar;junit-platform-console-standalone.jar;junit-jupiter-api.jar;junit-jupiter-engine.jar" -d build src\frames\*.java
 
       - name: Exécuter les tests unitaires
         run: |
-          java -cp ".;build;junit-platform-console-standalone.jar;junit-jupiter-api.jar;junit-jupiter-engine.jar;sqlite-jdbc.jar" org.junit.platform.console.ConsoleLauncher --scan-classpath
+          java -cp ".;build;sqlite-jdbc.jar;junit-platform-console-standalone.jar;junit-jupiter-api.jar;junit-jupiter-engine.jar" org.junit.platform.console.ConsoleLauncher --scan-classpath
 
       - name: Déploiement local
         run: .\deploy.bat
