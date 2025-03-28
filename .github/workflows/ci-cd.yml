@@ -50,4 +50,4 @@ jobs:
       # Étape 8: Déploiement local (exécution du fichier JAR login.jar situé dans src/)
       - name: Exécuter l'application login.jar
         run: |
-          java -cp ".;build;junit-platform-console-standalone.jar;junit-jupiter-api.jar;junit-jupiter-engine.jar;sqlite-jdbc.jar" -Djava.library.path=. -jar src/login.jar
+          java -Djava.library.path=. -cp ".;build;junit-platform-console-standalone.jar;junit-jupiter-api.jar;junit-jupiter-engine.jar;sqlite-jdbc.jar" -jar src/login.jar
