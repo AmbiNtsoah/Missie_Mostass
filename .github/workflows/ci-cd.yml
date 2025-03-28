@@ -13,7 +13,7 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      # Étape 1: Vérification du dépôt
+      # Étape 1: Checkout du dépôt
       - name: Checkout du dépôt
         uses: actions/checkout@v4
 
@@ -28,9 +28,10 @@ jobs:
           curl -L -o junit-jupiter-api.jar https://repo.maven.apache.org/maven2/org/junit/jupiter/junit-jupiter-api/5.9.2/junit-jupiter-api-5.9.2.jar
           curl -L -o junit-jupiter-engine.jar https://repo.maven.apache.org/maven2/org/junit/jupiter/junit-jupiter-engine/5.9.2/junit-jupiter-engine-5.9.2.jar
 
-      # Étape 4: Télécharger le driver SQLite JDBC
+      # Étape 4: Télécharger le pilote SQLite JDBC
       - name: Télécharger le pilote SQLite JDBC
-        run: curl -L -o sqlite-jdbc.jar https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/3.36.0.3/sqlite-jdbc-3.36.0.3.jar
+        run: |
+          curl -L -o sqlite-jdbc.jar https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/3.36.0.3/sqlite-jdbc-3.36.0.3.jar
 
       # Étape 5: Vérifier les fichiers téléchargés
       - name: Vérifier les fichiers téléchargés
@@ -39,7 +40,7 @@ jobs:
       # Étape 6: Compiler les fichiers Java
       - name: Compiler les fichiers Java
         run: |
-          javac -cp ".;junit-platform-console-standalone.jar;junit-jupiter-api.jar;junit-jupiter-engine.jar;sqlite-jdbc.jar" -d build src/frames/*.java
+          javac -cp ".;junit-platform-console-standalone.jar;junit-jupiter-api.jar;junit-jupiter-engine.jar;sqlite-jdbc.jar" -d build src\frames\*.java
 
       # Étape 7: Exécuter les tests unitaires
       - name: Exécuter les tests unitaires
