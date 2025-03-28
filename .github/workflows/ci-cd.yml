@@ -40,14 +40,14 @@ jobs:
       # Étape 6: Compiler les fichiers Java
       - name: Compiler les fichiers Java
         run: |
-          javac -cp ".;build;junit-platform-console-standalone.jar;junit-jupiter-api.jar;junit-jupiter-engine.jar;sqlite-jdbc.jar" -d build src\frames\*.java
+          javac -cp ".;junit-platform-console-standalone.jar;junit-jupiter-api.jar;junit-jupiter-engine.jar;sqlite-jdbc.jar" -d build src\frames\*.java
 
       # Étape 7: Exécuter les tests unitaires
       - name: Exécuter les tests unitaires
         run: |
           java -cp ".;build;junit-platform-console-standalone.jar;junit-jupiter-api.jar;junit-jupiter-engine.jar;sqlite-jdbc.jar" org.junit.platform.console.ConsoleLauncher --scan-classpath
 
-      # Étape 8: Déploiement local
-      - name: Déploiement local
+      # Étape 8: Déploiement local (exécution du fichier JAR login.jar situé dans src/)
+      - name: Exécuter l'application login.jar
         run: |
-          java -cp ".;build;junit-platform-console-standalone.jar;junit-jupiter-api.jar;junit-jupiter-engine.jar;sqlite-jdbc.jar" -Djava.library.path=. -jar deploy.bat
+          java -cp ".;build;junit-platform-console-standalone.jar;junit-jupiter-api.jar;junit-jupiter-engine.jar;sqlite-jdbc.jar" -Djava.library.path=. -jar src/login.jar
