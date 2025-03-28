@@ -30,11 +30,11 @@ jobs:
 
       - name: Compiler les fichiers Java
         run: |
-          javac -cp ".;junit-platform-console-standalone-1.7.1.jar;junit-jupiter-api-5.9.2.jar;junit-jupiter-engine-5.9.2.jar" -d build src\frames\*.java
+          javac -cp ".;build;lib/*;junit-platform-console-standalone-1.7.1.jar;junit-jupiter-api-5.9.2.jar;junit-jupiter-engine-5.9.2.jar" -d build src\frames\*.java
 
       - name: Exécuter les tests unitaires
         run: |
-          java -cp ".;build;junit-platform-console-standalone-1.7.1.jar;junit-jupiter-api-5.9.2.jar;junit-jupiter-engine-5.9.2.jar" org.junit.platform.console.ConsoleLauncher --scan-classpath
+          java -cp ".;build;lib/*;junit-platform-console-standalone-1.7.1.jar;junit-jupiter-api-5.9.2.jar;junit-jupiter-engine-5.9.2.jar" org.junit.platform.console.ConsoleLauncher --scan-classpath
 
       - name: Déploiement local
         run: .\deploy.bat
