@@ -3,7 +3,7 @@ name: CI/CD Pipeline (Windows)
 on:
   push:
     branches:
-      - developper_2
+      - master
   pull_request:
     branches:
       - master
